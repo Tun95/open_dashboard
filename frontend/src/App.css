@@ -1,0 +1,139 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --color-bg: #f3f5f9;
+  --color-border: #e7e8eb;
+  --color-background: #f6f9fc;
+  --color-tab: #389efd;
+  --color-white: #ffffff;
+  --color-black: #272727;
+
+  --color-pink: #ec66666b;
+  --color-brown: #9b4b4b56;
+  --color-grayish: #5d858b7a;
+  --color-red: #ff0000;
+
+  --color-gray: #9ca3af;
+  --color-deep-gray: #4d4a4a;
+  --color-gray-200: #fafafa;
+  --color-light-dark-gray: hsl(0, 0%, 60%);
+
+  --transition: all 600ms ease;
+
+  --container-width-lg: 98%;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background: var(--color-white);
+  color: var(--color-black);
+}
+
+.container {
+  width: var(--container-width-lg);
+
+  margin: auto;
+}
+
+.d_flex {
+  display: flex;
+  justify-content: space-between;
+}
+.d_grid {
+  display: grid;
+  gap: 15px;
+  grid-template-columns: repeat(2, 1fr);
+}
+.j_flex {
+  display: flex;
+  justify-content: space-around;
+}
+.c_flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.f_flex {
+  display: flex;
+}
+.a_flex {
+  display: flex;
+  align-items: center;
+}
+.l_flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.s_flex {
+  display: flex;
+
+  flex-direction: column;
+}
+.p_flex {
+  display: flex;
+  justify-content: center;
+}
+
+a {
+  text-decoration: none;
+  color: var(--color-black);
+}
+
+.main_btn {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  padding: 7px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+  outline: none;
+  transition: var(--transition);
+}
+select {
+  border: none;
+  background-color: transparent;
+  font-size: 15px;
+  outline: none;
+  color: var(--color-black);
+}
+
+/* antd checkbox */
+/* Change checkmark color to black */
+/* Make the checkmark white */
+.ant-checkbox-checked .ant-checkbox-inner::after {
+  border-color: white !important;
+}
+
+/* Change checked background and border color */
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: var(--color-black);
+  border-color: var(--color-black);
+}
+
+/* Change default border color */
+.ant-checkbox-inner {
+  border-color: var(--color-black);
+}
+
+/* Change hover background color */
+.ant-checkbox-wrapper:hover .ant-checkbox-inner,
+.ant-checkbox:hover .ant-checkbox-inner {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Change hover background and border color when checked */
+.ant-checkbox-checked:hover .ant-checkbox-inner,
+.ant-checkbox-wrapper:hover .ant-checkbox-checked .ant-checkbox-inner {
+  background-color: rgba(0, 0, 0, 0.1) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}

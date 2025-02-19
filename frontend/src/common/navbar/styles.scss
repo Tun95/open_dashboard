@@ -1,0 +1,40 @@
+.nav_bar {
+  border-right: 1px solid var(--color-border);
+  border-bottom: 2px solid var(--color-border);
+  .content {
+    padding: 6px 10px;
+
+    .left {
+      .img_text {
+        gap: 10px;
+        .img {
+          img {
+            width: 30px;
+          }
+        }
+        .text {
+          h4 {
+            font-weight: 500;
+          }
+        }
+      }
+    }
+    .right {
+      .share_more {
+        gap: 15px;
+        .share {
+          border: 1px solid var(--color-border);
+          padding: 3px 10px;
+          border-radius: 20px;
+          font-size: 15px;
+          background: transparent;
+          outline: none;
+        }
+        .icon {
+          font-size: 23px;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
