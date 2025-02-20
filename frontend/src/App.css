@@ -137,3 +137,21 @@ select {
   background-color: rgba(0, 0, 0, 0.1) !important;
   border-color: rgba(0, 0, 0, 0.1) !important;
 }
+
+/* MUI CHECKBOX */
+.custom-checkbox .MuiSvgIcon-root {
+  color: var(--color-black);
+}
+
+.custom-checkbox.Mui-checked .MuiSvgIcon-root {
+  color: var(--color-black);
+}
+
+.custom-checkbox.MuiCheckbox-indeterminate .MuiSvgIcon-root {
+  color: var(--color-black);
+}
+
+.custom-checkbox:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}

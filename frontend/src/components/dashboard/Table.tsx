@@ -6,7 +6,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Checkbox from "@mui/material/Checkbox";
+
 import TextField from "@mui/material/TextField";
 import axios from "axios";
 import { io } from "socket.io-client";
@@ -17,6 +17,7 @@ import {
   MaterialSymbolsLightAddCircleOutlineRounded,
   PrimeListCheck,
 } from "../../assets/icons/Icons";
+import { Checkbox, CheckboxChangeEvent } from "antd";
 
 interface SpreadsheetRow {
   id: number;
@@ -30,8 +31,8 @@ interface SpreadsheetRow {
 
 function TableComponent() {
   const [spreadsheet, setSpreadsheet] = useState<SpreadsheetRow[]>([]);
-  const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [isEditing, setIsEditing] = useState<number | null>(null);
+  const [allUnsubscribed, setAllUnsubscribed] = useState<boolean>(false);
   const [newRow, setNewRow] = useState<SpreadsheetRow>({
     id: Date.now(),
     description: "",
@@ -48,12 +49,16 @@ function TableComponent() {
     socket.connect();
     socket.on("update", (data: SpreadsheetRow[]) => {
       setSpreadsheet(data);
+      setAllUnsubscribed(data.every((row: SpreadsheetRow) => row.unsubscribed));
     });
 
     const fetchSpreadsheet = async () => {
       try {
         const result = await axios.get("http://localhost:5000/spreadsheet");
         setSpreadsheet(result.data);
+        setAllUnsubscribed(
+          result.data.every((row: SpreadsheetRow) => row.unsubscribed)
+        );
       } catch (error) {
         console.error("Error fetching data", error);
       }
@@ -113,11 +118,10 @@ function TableComponent() {
   const handleAddRow = async (event: React.MouseEvent) => {
     event.preventDefault(); // Prevent default form submission behavior
     try {
-      const response = await axios.post(
-        "http://localhost:5000/spreadsheet",
-        newRow
-      );
-      setSpreadsheet((prevData) => [...prevData, response.data]);
+      // Send the new row to the backend
+      await axios.post("http://localhost:5000/spreadsheet", newRow);
+
+      // Reset the newRow state for the next addition
       setNewRow({
         id: Date.now(),
         description: "",
@@ -127,9 +131,30 @@ function TableComponent() {
         assignedTo: "",
         unsubscribed: false,
       });
+
+      // Do NOT update the local state here. Wait for the Socket.IO update event.
     } catch (error) {
       console.error("Error adding row", error);
     }
+  };
+
+  const handleSelectAll = (event: CheckboxChangeEvent) => {
+    const isChecked = event.target.checked;
+    setAllUnsubscribed(isChecked);
+
+    const updatedSpreadsheet = spreadsheet.map((row) => ({
+      ...row,
+      unsubscribed: isChecked,
+    }));
+    setSpreadsheet(updatedSpreadsheet);
+
+    updatedSpreadsheet.forEach(async (row) => {
+      try {
+        await axios.put(`http://localhost:5000/spreadsheet/${row.id}`, row);
+      } catch (error) {
+        console.error("Error updating row", error);
+      }
+    });
   };
   return (
     <div className="spread_sheet_list light_shadow">
@@ -139,14 +164,14 @@ function TableComponent() {
             <TableHead className="tabel_head">
               <TableRow className="tabel_row">
                 <TableCell className="tableCell">
-                  {/* <Checkbox
-                    checked={selectedRows.length === spreadsheet.length}
+                  <Checkbox
+                    checked={allUnsubscribed}
                     indeterminate={
-                      selectedRows.length > 0 &&
-                      selectedRows.length < spreadsheet.length
+                      spreadsheet.some((row) => row.unsubscribed) &&
+                      !spreadsheet.every((row) => row.unsubscribed)
                     }
                     onChange={handleSelectAll}
-                  /> */}
+                  />
                 </TableCell>
                 <TableCell className="tableCell">
                   <span className="head_icon a_flex">
@@ -265,17 +290,28 @@ function TableComponent() {
                   </TableCell>{" "}
                   <TableCell className="tableCell">
                     <Checkbox
-                      checked={selectedRows.includes(item.id.toString())}
-                      onChange={() =>
-                        setSelectedRows((prev) =>
-                          prev.includes(item.id.toString())
-                            ? prev.filter(
-                                (selectedId) =>
-                                  selectedId !== item.id.toString()
-                              )
-                            : [...prev, item.id.toString()]
-                        )
-                      }
+                      checked={item.unsubscribed}
+                      onChange={(e: CheckboxChangeEvent) => {
+                        const updatedRow = {
+                          ...item,
+                          unsubscribed: e.target.checked,
+                        };
+                        setSpreadsheet((prevData) =>
+                          prevData.map((row) =>
+                            row.id === item.id ? updatedRow : row
+                          )
+                        );
+
+                        // Send the update to the backend
+                        axios
+                          .put(
+                            `http://localhost:5000/spreadsheet/${item.id}`,
+                            updatedRow
+                          )
+                          .catch((error) =>
+                            console.error("Error updating row", error)
+                          );
+                      }}
                     />
                   </TableCell>
                   <TableCell className="tableCell">
