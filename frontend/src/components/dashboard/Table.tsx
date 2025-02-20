@@ -218,9 +218,9 @@ function TableComponent() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {spreadsheet.map((item) => (
+              {spreadsheet.map((item, index) => (
                 <TableRow key={item.id}>
-                  <TableCell className="tableCell">{item.id}</TableCell>
+                  <TableCell className="tableCell">{index + 1}</TableCell>{" "}
                   <TableCell className="tableCell">
                     {isEditing === item.id ? (
                       <TextField

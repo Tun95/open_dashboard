@@ -182,12 +182,10 @@ app.delete(
       io.emit("update", spreadsheet);
       res.json({ message: "Spreadsheet deleted" });
     } catch (error) {
-      res
-        .status(500)
-        .json({
-          message: "Failed to delete spreadsheet",
-          error: error.message,
-        });
+      res.status(500).json({
+        message: "Failed to delete spreadsheet",
+        error: error.message,
+      });
     }
   })
 );
@@ -200,6 +198,5 @@ io.on("connection", (socket) => {
     console.log(`User disconnected: ${socket.id}`);
   });
 });
-
 
 server.listen(5000, () => console.log("Server running on port 5000"));
