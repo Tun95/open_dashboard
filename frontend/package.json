@@ -16,12 +16,14 @@
     "@mui/material": "^6.4.5",
     "@types/styled-components": "^5.1.34",
     "antd": "^5.24.1",
+    "axios": "^1.7.9",
     "react": "^19.0.0",
     "react-data-grid": "^7.0.0-beta.48",
     "react-dom": "^19.0.0",
     "react-helmet-async": "^2.0.5",
     "react-router-dom": "^7.2.0",
-    "sass": "^1.85.0"
+    "sass": "^1.85.0",
+    "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
